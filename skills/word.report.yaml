@@ -1,0 +1,143 @@
+name: word.report
+version: "1.0.0"
+description: "Professional report with TOC, heading styles, headers/footers, page numbers"
+category: word
+format: docx
+author: "office-oxide-mcp"
+icon: "file-text"
+
+inputs:
+  - name: title
+    type: string
+    description: "Report title"
+    required: true
+  - name: author
+    type: string
+    description: "Report author name"
+    required: false
+    default: ""
+  - name: sections
+    type: array
+    description: "Array of report sections: [{heading, content, level?}]"
+    required: true
+  - name: include_toc
+    type: boolean
+    description: "Include table of contents"
+    required: false
+    default: true
+  - name: include_page_numbers
+    type: boolean
+    description: "Include page numbers in footer"
+    required: false
+    default: true
+  - name: include_header
+    type: boolean
+    description: "Include report title in header"
+    required: false
+    default: true
+  - name: theme
+    type: string
+    description: "Document theme (professional, modern, classic)"
+    required: false
+    default: "professional"
+  - name: date
+    type: string
+    description: "Document date (ISO format or free text)"
+    required: false
+    default: ""
+
+outputs:
+  - name: file_path
+    type: string
+    description: "Path to the generated Word document"
+  - name: section_count
+    type: integer
+    description: "Number of sections in the report"
+  - name: word_count_estimate
+    type: integer
+    description: "Estimated word count"
+
+templates:
+  primary: "word.report"
+  description: "Professional report template with TOC, styles, headers, and footers"
+
+placeholders:
+  - name: "{{TITLE}}"
+    type: string
+    description: "Report title displayed on cover and header"
+  - name: "{{AUTHOR}}"
+    type: string
+    description: "Author name on cover page"
+  - name: "{{DATE}}"
+    type: string
+    description: "Date on cover page"
+  - name: "{{TOC}}"
+    type: markup
+    description: "Table of contents placeholder"
+  - name: "{{SECTIONS}}"
+    type: array
+    description: "Report sections with heading and content"
+  - name: "{{THEME_COLOR}}"
+    type: string
+    description: "Primary theme color hex code"
+
+formatting:
+  font:
+    family: "Calibri"
+    size: 11
+  heading1:
+    font_size: 18
+    bold: true
+    color: "1F3864"
+    space_before: 24
+    space_after: 12
+  heading2:
+    font_size: 14
+    bold: true
+    color: "2E75B6"
+    space_before: 18
+    space_after: 6
+  heading3:
+    font_size: 12
+    bold: true
+    color: "5B9BD5"
+    space_before: 12
+    space_after: 6
+  body:
+    font_size: 11
+    line_spacing: 1.15
+    space_after: 6
+  cover:
+    title_font_size: 36
+    title_color: "1F3864"
+    subtitle_font_size: 16
+    subtitle_color: "2E75B6"
+  margins:
+    top: 72
+    bottom: 72
+    left: 72
+    right: 72
+
+validation:
+  rules:
+    - name: title_not_empty
+      type: assert
+      field: title
+      message: "Report title must not be empty"
+    - name: sections_not_empty
+      type: assert
+      field: sections
+      message: "At least one section is required"
+    - name: sections_have_heading
+      type: custom
+      field: sections
+      message: "Each section must have a heading"
+    - name: sections_have_content
+      type: custom
+      field: sections
+      message: "Each section must have content"
+    - name: theme_valid
+      type: enum
+      field: theme
+      values: ["professional", "modern", "classic"]
+      message: "Theme must be one of: professional, modern, classic"

@@ -1,0 +1,85 @@
+name: word.mailmerge
+version: "1.0.0"
+description: "Template-based bulk document generation from CSV/JSON data source"
+category: word
+format: docx
+author: "office-oxide-mcp"
+icon: "mail"
+
+inputs:
+  - name: template_text
+    type: string
+    description: "Template text with {{field_name}} placeholders"
+    required: true
+  - name: data_source
+    type: array
+    description: "Array of record objects with field values"
+    required: true
+  - name: output_format
+    type: string
+    description: "Output format (docx, pdf)"
+    required: false
+    default: "docx"
+  - name: filename_prefix
+    type: string
+    description: "Prefix for generated filenames"
+    required: false
+    default: "document"
+
+outputs:
+  - name: file_paths
+    type: array
+    description: "Paths to generated documents (one per record)"
+  - name: record_count
+    type: integer
+    description: "Number of records processed"
+  - name: fields_found
+    type: array
+    description: "List of placeholder fields detected in template"
+
+templates:
+  primary: "word.mailmerge"
+  description: "Minimal document with placeholder text ready for merge field replacement"
+
+placeholders:
+  - name: "{{TEMPLATE_BODY}}"
+    type: text
+    description: "Template text with {{field}} placeholders embedded in document body"
+
+formatting:
+  font:
+    family: "Calibri"
+    size: 11
+  body:
+    font_size: 11
+    line_spacing: 1.15
+  margins:
+    top: 72
+    bottom: 72
+    left: 72
+    right: 72
+
+validation:
+  rules:
+    - name: template_not_empty
+      type: assert
+      field: template_text
+      message: "Template text must not be empty"
+    - name: data_source_not_empty
+      type: assert
+      field: data_source
+      message: "Data source must have at least one record"
+    - name: data_source_is_array
+      type: assert
+      field: data_source
+      message: "Data source must be an array of objects"
+    - name: template_has_fields
+      type: regex
+      field: template_text
+      pattern: "\\{\\{\\w+\\}\\}"
+      message: "Template must contain at least one {{field}} placeholder"
+    - name: output_format_valid
+      type: enum
+      field: output_format
+      values: ["docx", "pdf"]
+      message: "Output format must be one of: docx, pdf"

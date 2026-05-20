@@ -1,0 +1,17 @@
+# Criterion benchmark output
+# Generated Office file output
+glama-search.md
+glama-snapshot.md
+mcpso-submit.md
+.opencode/
+output/
+output/*
+.playwright-mcp/
+pulsemcp.md
+# Python benchmark output
+scripts/bench_results.json
+*.snapshot.md
+.symphony/
+/target
+target/
+target/criterion/

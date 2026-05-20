@@ -1,0 +1,33 @@
+name: data.export
+version: "1.0.0"
+description: "Export data from any Office document to structured JSON"
+type: multi
+instructions: "Extract structured data from an Office document and export as JSON. Supports Excel ranges, Word tables, and PPT slide content."
+placeholders:
+  - name: file_path
+    type: string
+    description: "Path to the source Office document"
+  - name: output_format
+    type: string
+    description: "Export format: json, csv, or markdown"
+    default: "json"
+  - name: sheet_or_table
+    type: string
+    description: "Excel sheet name or Word table index"
+    default: ""
+tools:
+  - name: office_read
+    args:
+      file_path: "{file_path}"
+      output_format: "{output_format}"
+  - name: write_file
+    args:
+      path: "{file_path}.{output_format}"
+      content: "{output}"
+formatting:
+  font: "Inter, 10pt"
+validation:
+  - rule: no_empty_placeholders
+  - rule: max_file_size
+    params:
+      max_mb: 50

@@ -1,0 +1,233 @@
+name: word.invoice
+version: "1.0.0"
+description: "Invoice with line items, subtotals, tax calculation, payment terms"
+category: word
+format: docx
+author: "office-oxide-mcp"
+icon: "file-invoice"
+
+inputs:
+  - name: invoice_number
+    type: string
+    description: "Unique invoice identifier"
+    required: true
+  - name: date
+    type: string
+    description: "Invoice date (ISO format)"
+    required: false
+    default: ""
+  - name: due_date
+    type: string
+    description: "Payment due date (ISO format)"
+    required: false
+    default: ""
+  - name: from_company
+    type: string
+    description: "Sender company name"
+    required: true
+  - name: from_address
+    type: string
+    description: "Sender address"
+    required: true
+  - name: from_email
+    type: string
+    description: "Sender email"
+    required: false
+    default: ""
+  - name: to_company
+    type: string
+    description: "Recipient/client company name"
+    required: true
+  - name: to_address
+    type: string
+    description: "Recipient address"
+    required: true
+  - name: to_email
+    type: string
+    description: "Recipient email"
+    required: false
+    default: ""
+  - name: line_items
+    type: array
+    description: "Array of line items: [{description, quantity, unit_price}]"
+    required: true
+  - name: tax_rate
+    type: number
+    description: "Tax rate as decimal (e.g., 0.08 for 8%)"
+    required: false
+    default: 0.0
+  - name: tax_label
+    type: string
+    description: "Label for tax on invoice (e.g., VAT, Sales Tax)"
+    required: false
+    default: "Tax"
+  - name: currency
+    type: string
+    description: "Currency code (USD, EUR, GBP, etc.)"
+    required: false
+    default: "USD"
+  - name: payment_terms
+    type: string
+    description: "Payment terms text"
+    required: false
+    default: "Net 30"
+  - name: notes
+    type: string
+    description: "Additional notes for the recipient"
+    required: false
+    default: ""
+
+outputs:
+  - name: file_path
+    type: string
+    description: "Path to the generated invoice document"
+  - name: subtotal
+    type: number
+    description: "Subtotal amount before tax"
+  - name: tax_amount
+    type: number
+    description: "Calculated tax amount"
+  - name: total
+    type: number
+    description: "Total amount due"
+  - name: line_item_count
+    type: integer
+    description: "Number of line items"
+
+templates:
+  primary: "word.invoice"
+  description: "Invoice template with company details, line item table, totals section, payment terms"
+
+placeholders:
+  - name: "{{INVOICE_NUMBER}}"
+    type: string
+    description: "Invoice number"
+  - name: "{{DATE}}"
+    type: string
+    description: "Invoice date"
+  - name: "{{DUE_DATE}}"
+    type: string
+    description: "Payment due date"
+  - name: "{{FROM_COMPANY}}"
+    type: string
+    description: "Sender company name"
+  - name: "{{FROM_ADDRESS}}"
+    type: string
+    description: "Sender address"
+  - name: "{{FROM_EMAIL}}"
+    type: string
+    description: "Sender email"
+  - name: "{{TO_COMPANY}}"
+    type: string
+    description: "Recipient company name"
+  - name: "{{TO_ADDRESS}}"
+    type: string
+    description: "Recipient address"
+  - name: "{{TO_EMAIL}}"
+    type: string
+    description: "Recipient email"
+  - name: "{{LINE_ITEMS}}"
+    type: table
+    description: "Line items table with description, quantity, unit price, total"
+  - name: "{{SUBTOTAL}}"
+    type: number
+    description: "Subtotal amount"
+  - name: "{{TAX_LABEL}}"
+    type: string
+    description: "Tax label text"
+  - name: "{{TAX_RATE}}"
+    type: string
+    description: "Tax rate as percentage string"
+  - name: "{{TAX_AMOUNT}}"
+    type: number
+    description: "Tax amount"
+  - name: "{{TOTAL}}"
+    type: number
+    description: "Total amount"
+  - name: "{{CURRENCY}}"
+    type: string
+    description: "Currency symbol"
+  - name: "{{PAYMENT_TERMS}}"
+    type: string
+    description: "Payment terms text"
+  - name: "{{NOTES}}"
+    type: string
+    description: "Additional notes"
+
+formatting:
+  font:
+    family: "Calibri"
+    size: 10
+  header:
+    bold: true
+    fill: "1F3864"
+    font_color: "FFFFFF"
+  title:
+    font_size: 28
+    bold: true
+    color: "1F3864"
+  company_info:
+    font_size: 10
+    color: "555555"
+  line_items:
+    header_fill: "D9E2F3"
+    header_bold: true
+    even_fill: "F2F2F2"
+    odd_fill: "FFFFFF"
+    borders: true
+  totals:
+    font_size: 12
+    bold: true
+  total_due:
+    font_size: 16
+    bold: true
+    color: "1F3864"
+  margins:
+    top: 72
+    bottom: 72
+    left: 72
+    right: 72
+
+validation:
+  rules:
+    - name: invoice_number_not_empty
+      type: assert
+      field: invoice_number
+      message: "Invoice number must not be empty"
+    - name: from_company_not_empty
+      type: assert
+      field: from_company
+      message: "Sender company name must not be empty"
+    - name: from_address_not_empty
+      type: assert
+      field: from_address
+      message: "Sender address must not be empty"
+    - name: to_company_not_empty
+      type: assert
+      field: to_company
+      message: "Recipient company name must not be empty"
+    - name: to_address_not_empty
+      type: assert
+      field: to_address
+      message: "Recipient address must not be empty"
+    - name: line_items_not_empty
+      type: assert
+      field: line_items
+      message: "At least one line item is required"
+    - name: line_items_valid
+      type: custom
+      field: line_items
+      message: "Each line item must have description, quantity, and unit_price"
+    - name: line_items_positive
+      type: custom
+      field: line_items
+      message: "Quantity and unit_price must be positive numbers"
+    - name: tax_rate_range
+      type: custom
+      field: tax_rate
+      message: "Tax rate must be between 0 and 1"
+    - name: currency_valid
+      type: regex
+      field: currency
+      pattern: "^[A-Z]{3}$"
+      message: "Currency must be a 3-letter ISO code (USD, EUR, GBP, etc.)"

@@ -1,0 +1,132 @@
+name: excel.pivot
+version: "1.0.0"
+description: "Pivot table with row/column/value fields and slicers"
+category: excel
+format: xlsx
+author: "office-oxide-mcp"
+icon: "pivot"
+
+inputs:
+  - name: data
+    type: array
+    description: "2D data array with header row (source data for pivot)"
+    required: true
+  - name: rows
+    type: array
+    description: "Column name(s) to use as row fields"
+    required: true
+  - name: columns
+    type: array
+    description: "Column name(s) to use as column fields"
+    required: false
+    default: []
+  - name: values
+    type: array
+    description: "Column name(s) to aggregate as value fields"
+    required: true
+  - name: aggregate
+    type: string
+    description: "Aggregation function (sum, count, average, max, min)"
+    required: false
+    default: "sum"
+  - name: sheet_name
+    type: string
+    description: "Source data sheet name"
+    required: false
+    default: "SourceData"
+  - name: pivot_sheet_name
+    type: string
+    description: "Pivot table output sheet name"
+    required: false
+    default: "PivotTable"
+
+outputs:
+  - name: file_path
+    type: string
+    description: "Path to the generated Excel file"
+  - name: row_fields
+    type: array
+    description: "Fields used as rows"
+  - name: value_fields
+    type: array
+    description: "Fields used as values"
+  - name: aggregate
+    type: string
+    description: "Aggregation function used"
+
+templates:
+  primary: "excel.pivot"
+  description: "Workbook with source data sheet and pivot table structure"
+
+placeholders:
+  - name: "{{DATA}}"
+    type: table
+    description: "Source data with headers"
+  - name: "{{ROW_FIELDS}}"
+    type: array
+    description: "Row field column names"
+  - name: "{{COL_FIELDS}}"
+    type: array
+    description: "Column field column names"
+  - name: "{{VALUE_FIELDS}}"
+    type: array
+    description: "Value field column names"
+  - name: "{{AGGREGATE}}"
+    type: string
+    description: "Aggregation function name"
+  - name: "{{SHEET_NAME}}"
+    type: string
+    description: "Source data sheet name"
+  - name: "{{PIVOT_SHEET_NAME}}"
+    type: string
+    description: "Pivot table sheet name"
+
+formatting:
+  font:
+    family: "Calibri"
+    size: 11
+  header:
+    bold: true
+    fill: "4472C4"
+    font_color: "FFFFFF"
+  pivot_header:
+    bold: true
+    fill: "D9E2F3"
+  borders:
+    style: "thin"
+    color: "D9D9D9"
+  column_width: "auto"
+
+validation:
+  rules:
+    - name: data_not_empty
+      type: assert
+      field: data
+      message: "Data array must not be empty"
+    - name: data_min_rows
+      type: assert
+      field: data
+      message: "Data must have at least 2 rows (header + 1 data)"
+    - name: rows_not_empty
+      type: assert
+      field: rows
+      message: "At least one row field must be specified"
+    - name: values_not_empty
+      type: assert
+      field: values
+      message: "At least one value field must be specified"
+    - name: rows_exist_in_headers
+      type: custom
+      field: rows
+      depends_on: data
+      message: "Row field names must exist in data headers"
+    - name: values_exist_in_headers
+      type: custom
+      field: values
+      depends_on: data
+      message: "Value field names must exist in data headers"
+    - name: aggregate_valid
+      type: enum
+      field: aggregate
+      values: ["sum", "count", "average", "max", "min"]
+      message: "Aggregate must be one of: sum, count, average, max, min"

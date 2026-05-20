@@ -1,0 +1,92 @@
+name: excel.basic
+version: "1.0.0"
+description: "Read range, write cells, basic formatting for Excel worksheets"
+category: excel
+format: xlsx
+author: "office-oxide-mcp"
+icon: "table"
+
+inputs:
+  - name: data
+    type: array
+    description: "2D array of data to write (first row is optional header)"
+    required: true
+  - name: range
+    type: string
+    description: "Target cell range (e.g., A1 or A1:C10)"
+    required: false
+    default: "A1"
+  - name: sheet_name
+    type: string
+    description: "Target worksheet name"
+    required: false
+    default: "Sheet1"
+  - name: header_row
+    type: boolean
+    description: "Whether first row is a header"
+    required: false
+    default: true
+
+outputs:
+  - name: file_path
+    type: string
+    description: "Path to the generated Excel file"
+  - name: rows_written
+    type: integer
+    description: "Number of rows written"
+
+templates:
+  primary: "excel.basic"
+  description: "Blank worksheet with Calibri 11pt font, ready for data injection"
+
+placeholders:
+  - name: "{{DATA}}"
+    type: table
+    description: "2D data array as shared strings table"
+  - name: "{{RANGE}}"
+    type: string
+    description: "Target range reference"
+  - name: "{{SHEET_NAME}}"
+    type: string
+    description: "Sheet tab name"
+  - name: "{{HEADER_STYLE}}"
+    type: style
+    description: "Header formatting: bold, white font, blue fill"
+
+formatting:
+  font:
+    family: "Calibri"
+    size: 11
+  header:
+    bold: true
+    fill: "4472C4"
+    font_color: "FFFFFF"
+  borders:
+    style: "thin"
+    color: "D9D9D9"
+  column_width: "auto"
+  wrap_text: false
+
+validation:
+  rules:
+    - name: data_not_empty
+      type: assert
+      field: data
+      message: "Data array must not be empty"
+    - name: data_is_2d
+      type: assert
+      field: data
+      message: "Data must be a 2D array (array of arrays)"
+    - name: data_consistent_cols
+      type: assert
+      field: data
+      message: "All rows must have the same number of columns"
+    - name: range_format
+      type: regex
+      field: range
+      pattern: "^[A-Z]+[0-9]+(:[A-Z]+[0-9]+)?$"
+      message: "Range must be a valid Excel reference (e.g., A1 or A1:C10)"
+    - name: range_not_empty
+      type: assert
+      field: range
+      message: "Range must be a non-empty string"

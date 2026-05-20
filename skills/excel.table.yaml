@@ -1,0 +1,104 @@
+name: excel.table
+version: "1.0.0"
+description: "Styled table from data with auto-column-width, zebra striping, and filters"
+category: excel
+format: xlsx
+author: "office-oxide-mcp"
+icon: "grid"
+
+inputs:
+  - name: data
+    type: array
+    description: "2D array of data including header row"
+    required: true
+  - name: sheet_name
+    type: string
+    description: "Target worksheet name"
+    required: false
+    default: "Table1"
+  - name: table_style
+    type: string
+    description: "Table style name (light, medium, dark)"
+    required: false
+    default: "medium"
+  - name: auto_filter
+    type: boolean
+    description: "Enable auto-filters on header row"
+    required: false
+    default: true
+  - name: zebra_striping
+    type: boolean
+    description: "Apply alternating row colors"
+    required: false
+    default: true
+
+outputs:
+  - name: file_path
+    type: string
+    description: "Path to the generated Excel file"
+  - name: rows_written
+    type: integer
+    description: "Number of data rows written"
+  - name: columns
+    type: integer
+    description: "Number of columns in the table"
+
+templates:
+  primary: "excel.table"
+  description: "Worksheet with pre-configured table styles, filter row, and zebra striping"
+
+placeholders:
+  - name: "{{DATA}}"
+    type: table
+    description: "2D data array including headers"
+  - name: "{{TABLE_NAME}}"
+    type: string
+    description: "Excel table name"
+  - name: "{{SHEET_NAME}}"
+    type: string
+    description: "Sheet tab name"
+  - name: "{{TABLE_COLS}}"
+    type: integer
+    description: "Number of columns for filter range"
+  - name: "{{TABLE_ROWS}}"
+    type: integer
+    description: "Number of data rows for filter range"
+
+formatting:
+  font:
+    family: "Calibri"
+    size: 11
+  header:
+    bold: true
+    fill: "4472C4"
+    font_color: "FFFFFF"
+    height: 20
+  even_row:
+    fill: "D9E2F3"
+  odd_row:
+    fill: "FFFFFF"
+  borders:
+    style: "thin"
+    color: "8DB4E2"
+  column_width: "auto"
+  wrap_text: false
+
+validation:
+  rules:
+    - name: data_not_empty
+      type: assert
+      field: data
+      message: "Data array must not be empty"
+    - name: data_min_rows
+      type: assert
+      field: data
+      message: "Data must have at least 2 rows (1 header + 1 data)"
+    - name: data_is_2d
+      type: assert
+      field: data
+      message: "Data must be a 2D array"
+    - name: table_style_valid
+      type: enum
+      field: table_style
+      values: ["light", "medium", "dark"]
+      message: "Table style must be one of: light, medium, dark"

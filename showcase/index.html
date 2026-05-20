@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>office-oxide-mcp — Tool Showcase</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <h1>office-oxide-mcp</h1>
+      <p class="subtitle">Rust-native MCP server for Office document processing</p>
+      <p class="tagline">Sub-millisecond, local-first, open source alternative to Aspose.</p>
+      <div class="badges">
+        <a href="use-cases.html" class="badge">Use Cases</a>
+        <a href="https://github.com/Aimino-Tech/office-oxide-mcp" class="badge">GitHub</a>
+        <a href="https://crates.io/crates/office-oxide-mcp" class="badge">crates.io</a>
+        <a href="../API.md" class="badge">API Docs</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="toolbar">
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Search tools..." oninput="filterCards()">
+      </div>
+      <div class="filters" id="filters">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
+        <button class="filter-btn" data-filter="read" onclick="setFilter('read')">Read</button>
+        <button class="filter-btn" data-filter="write" onclick="setFilter('write')">Write</button>
+        <button class="filter-btn" data-filter="validate" onclick="setFilter('validate')">Validate</button>
+        <button class="filter-btn" data-filter="skill" onclick="setFilter('skill')">Skill</button>
+        <button class="filter-btn" data-filter="coherence" onclick="setFilter('coherence')">Coherence</button>
+      </div>
+    </div>
+
+    <div class="card-grid" id="cardGrid">
+      <div class="card" data-category="read" data-name="get_document_info">
+        <h3><a href="examples/doc-info/index.html">get_document_info</a></h3>
+        <p>Inspect metadata of DOCX, XLSX, PPTX files — size, format, sheet count</p>
+        <div class="card-tags"><span class="tag tag-read">Read</span></div>
+        <div class="card-snippet"><pre><code class="language-json">{"method":"get_document_info","params":{"file_path":"report.xlsx"}}</code></pre></div>
+      </div>
+
+      <div class="card" data-category="read" data-name="office_read">
+        <h3><a href="examples/office-read/index.html">office_read</a></h3>
+        <p>Read Office documents to JSON, Markdown, or chunked output for AI ingestion</p>
+        <div class="card-tags"><span class="tag tag-read">Read</span></div>
+        <div class="card-snippet"><pre><code class="language-json">{"method":"office_read","params":{"file_path":"contract.docx","output_format":"markdown"}}</code></pre></div>
+      </div>
+
+      <div class="card" data-category="write skill" data-name="skill_invoice">
+        <h3><a href="examples/skill-invoice/index.html">skill_run — word.invoice</a></h3>
+        <p>Generate a professional invoice with line items, tax, and totals</p>
+        <div class="card-tags"><span class="tag tag-write">Write</span><span class="tag tag-skill">Skill</span></div>
+        <div class="card-snippet"><pre><code class="language-json">{"method":"skill_run","params":{"skill_name":"word.invoice","data":"{\"line_items\":[...]}"}}</code></pre></div>
+      </div>
+
+      <div class="card" data-category="write skill" data-name="skill_excel">
+        <h3><a href="examples/skill-excel/index.html">skill_run — excel.basic</a></h3>
+        <p>Generate a formatted Excel workbook from structured data</p>
+        <div class="card-tags"><span class="tag tag-write">Write</span><span class="tag tag-skill">Skill</span></div>
+        <div class="card-snippet"><pre><code class="language-json">{"method":"skill_run","params":{"skill_name":"excel.basic","data":"{\"data\":[[\"Name\",\"Value\"],[\"A\",1]]}"}}</code></pre></div>
+      </div>
+
+      <div class="card" data-category="write skill" data-name="skill_ppt">
+        <h3><a href="examples/skill-ppt/index.html">skill_run — ppt.deck</a></h3>
+        <p>Generate a PowerPoint deck from a structured slide outline</p>
+        <div class="card-tags"><span class="tag tag-write">Write</span><span class="tag tag-skill">Skill</span></div>
+        <div class="card-snippet"><pre><code class="language-json">{"method":"skill_run","params":{"skill_name":"ppt.deck","data":"{\"slides\":[...]}"}}</code></pre></div>
+      </div>
+
+      <div class="card" data-category="coherence" data-name="propagate_edit">
+        <h3><a href="examples/propagate-edit/index.html">office_propagate_edit</a></h3>
+        <p>Update an entity value across a document and cascade to all dependents</p>
+        <div class="card-tags"><span class="tag tag-coherence">Coherence</span></div>
+        <div class="card-snippet"><pre><code class="language-json">{"method":"office_propagate_edit","params":{"entity_id":"company_name","new_value":"Acme Corp"}}</code></pre></div>
+      </div>
+
+      <div class="card" data-category="validate" data-name="validate">
+        <h3><a href="examples/validate/index.html">skill_validate</a></h3>
+        <p>Validate a document against a skill's rules (placeholders, styles, brand colors)</p>
+        <div class="card-tags"><span class="tag tag-validate">Validate</span></div>
+        <div class="card-snippet"><pre><code class="language-json">{"method":"skill_validate","params":{"skill_name":"word.report","file_path":"report.docx"}}</code></pre></div>
+      </div>
+
+      <div class="card" data-category="read" data-name="list_formats">
+        <h3><a href="examples/list-formats/index.html">list_formats</a></h3>
+        <p>List all supported Office document formats with read/write capabilities</p>
+        <div class="card-tags"><span class="tag tag-read">Read</span></div>
+        <div class="card-snippet"><pre><code class="language-json">{"method":"list_formats","params":{}}</code></pre></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>office-oxide-mcp — <a href="use-cases.html">Use Cases</a> · <a href="https://github.com/Aimino-Tech/office-oxide-mcp">GitHub</a> · <a href="https://crates.io/crates/office-oxide-mcp">crates.io</a> · <a href="../API.md">API Docs</a></p>
+      <p>Licensed under Apache 2.0 / MIT</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

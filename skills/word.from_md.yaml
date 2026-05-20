@@ -1,0 +1,111 @@
+name: word.from_md
+version: "1.0.0"
+description: "Markdown to styled Word document with theme colors"
+category: word
+format: docx
+author: "office-oxide-mcp"
+icon: "file-text"
+
+inputs:
+  - name: markdown_text
+    type: string
+    description: "Markdown content to convert to Word document"
+    required: true
+  - name: title
+    type: string
+    description: "Document title"
+    required: false
+    default: "Document"
+  - name: theme
+    type: string
+    description: "Document theme (professional, modern, classic)"
+    required: false
+    default: "professional"
+  - name: include_toc
+    type: boolean
+    description: "Include table of contents"
+    required: false
+    default: false
+  - name: include_page_numbers
+    type: boolean
+    description: "Include page numbers"
+    required: false
+    default: true
+
+outputs:
+  - name: file_path
+    type: string
+    description: "Path to the generated Word document"
+  - name: word_count
+    type: integer
+    description: "Word count of the document"
+  - name: headings
+    type: array
+    description: "List of headings extracted from markdown"
+
+templates:
+  primary: "word.from_md"
+  description: "Theme-ready document template for markdown conversion"
+
+placeholders:
+  - name: "{{TITLE}}"
+    type: string
+    description: "Document title"
+  - name: "{{CONTENT}}"
+    type: markup
+    description: "Converted markdown content as styled Word paragraphs"
+  - name: "{{THEME_COLOR}}"
+    type: string
+    description: "Primary theme color hex code"
+
+formatting:
+  font:
+    family: "Calibri"
+    size: 11
+  heading1:
+    font_size: 18
+    bold: true
+    color: "1F3864"
+  heading2:
+    font_size: 14
+    bold: true
+    color: "2E75B6"
+  heading3:
+    font_size: 12
+    bold: true
+    color: "5B9BD5"
+  body:
+    font_size: 11
+    line_spacing: 1.15
+  code:
+    font_family: "Consolas"
+    font_size: 9
+    fill: "F2F2F2"
+  blockquote:
+    italic: true
+    color: "555555"
+    left_indent: 360
+  list:
+    left_indent: 360
+    hanging_indent: 180
+  margins:
+    top: 72
+    bottom: 72
+    left: 72
+    right: 72
+
+validation:
+  rules:
+    - name: markdown_not_empty
+      type: assert
+      field: markdown_text
+      message: "Markdown text must not be empty"
+    - name: title_not_empty
+      type: assert
+      field: title
+      message: "Document title must not be empty"
+    - name: theme_valid
+      type: enum
+      field: theme
+      values: ["professional", "modern", "classic"]
+      message: "Theme must be one of: professional, modern, classic"

@@ -1,0 +1,114 @@
+name: ppt.from_md
+version: "1.0.0"
+description: "Markdown to presentation with theme (dark/light)"
+category: ppt
+format: pptx
+author: "office-oxide-mcp"
+icon: "presentation"
+
+inputs:
+  - name: markdown_text
+    type: string
+    description: "Markdown content to convert to slides"
+    required: true
+  - name: title
+    type: string
+    description: "Presentation title"
+    required: false
+    default: "Presentation"
+  - name: theme
+    type: string
+    description: "Visual theme (dark, light)"
+    required: false
+    default: "light"
+  - name: author
+    type: string
+    description: "Author name"
+    required: false
+    default: ""
+
+outputs:
+  - name: file_path
+    type: string
+    description: "Path to the generated PowerPoint file"
+  - name: slide_count
+    type: integer
+    description: "Number of slides created"
+  - name: themes_applied
+    type: object
+    description: "Theme colors applied to the presentation"
+
+templates:
+  primary: "ppt.from_md"
+  description: "Presentation template with dark and light theme color schemes"
+
+placeholders:
+  - name: "{{TITLE}}"
+    type: string
+    description: "Presentation title"
+  - name: "{{CONTENT}}"
+    type: markup
+    description: "Markdown content converted to slide structure"
+  - name: "{{THEME_COLOR}}"
+    type: string
+    description: "Primary theme color hex code"
+  - name: "{{THEME_BG}}"
+    type: string
+    description: "Background color hex code"
+  - name: "{{THEME_TEXT}}"
+    type: string
+    description: "Text color hex code"
+
+formatting:
+  font:
+    family: "Calibri"
+  light_theme:
+    background: "FFFFFF"
+    title_color: "1F3864"
+    body_color: "333333"
+    accent_color: "2E75B6"
+  dark_theme:
+    background: "1E1E1E"
+    title_color: "FFFFFF"
+    body_color: "CCCCCC"
+    accent_color: "5B9BD5"
+  title_slide:
+    title_font_size: 40
+    title_color: "FFFFFF"
+    subtitle_font_size: 18
+    subtitle_color: "B0D0F0"
+    background: "1F3864"
+  content_slide:
+    title_font_size: 28
+    title_color: "1F3864"
+    body_font_size: 16
+    body_color: "333333"
+    background: "FFFFFF"
+  body:
+    font_size: 16
+    line_spacing: 1.5
+  bullet:
+    font_size: 14
+    indent_levels:
+      - left_margin: 72
+      - left_margin: 144
+
+validation:
+  rules:
+    - name: markdown_not_empty
+      type: assert
+      field: markdown_text
+      message: "Markdown text must not be empty"
+    - name: title_not_empty
+      type: assert
+      field: title
+      message: "Presentation title must not be empty"
+    - name: theme_valid
+      type: enum
+      field: theme
+      values: ["dark", "light"]
+      message: "Theme must be one of: dark, light"
+    - name: markdown_has_content
+      type: custom
+      field: markdown_text
+      message: "Markdown must contain headings to generate slides (use # for slide titles)"

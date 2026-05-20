@@ -1,0 +1,121 @@
+name: excel.chart
+version: "1.0.0"
+description: "Bar/line/pie chart from data range with axis labels and legend"
+category: excel
+format: xlsx
+author: "office-oxide-mcp"
+icon: "bar-chart"
+
+inputs:
+  - name: data
+    type: array
+    description: "2D data array: first row as category labels, subsequent rows as series"
+    required: true
+  - name: chart_type
+    type: string
+    description: "Chart type (bar, line, pie)"
+    required: false
+    default: "bar"
+  - name: title
+    type: string
+    description: "Chart title"
+    required: false
+    default: "Chart"
+  - name: x_label
+    type: string
+    description: "X-axis label"
+    required: false
+    default: ""
+  - name: y_label
+    type: string
+    description: "Y-axis label"
+    required: false
+    default: ""
+  - name: sheet_name
+    type: string
+    description: "Source data sheet name"
+    required: false
+    default: "Data"
+  - name: show_legend
+    type: boolean
+    description: "Show chart legend"
+    required: false
+    default: true
+
+outputs:
+  - name: file_path
+    type: string
+    description: "Path to the generated Excel file"
+  - name: chart_type
+    type: string
+    description: "Type of chart created"
+  - name: series_count
+    type: integer
+    description: "Number of data series in the chart"
+
+templates:
+  primary: "excel.chart"
+  description: "Worksheet with data table and embedded chart object placeholder"
+
+placeholders:
+  - name: "{{DATA}}"
+    type: table
+    description: "Data table with category labels and series"
+  - name: "{{CHART_TYPE}}"
+    type: string
+    description: "Chart type identifier"
+  - name: "{{TITLE}}"
+    type: string
+    description: "Chart title text"
+  - name: "{{X_LABEL}}"
+    type: string
+    description: "X-axis label text"
+  - name: "{{Y_LABEL}}"
+    type: string
+    description: "Y-axis label text"
+  - name: "{{SHEET_NAME}}"
+    type: string
+    description: "Source data sheet name"
+
+formatting:
+  font:
+    family: "Calibri"
+    size: 11
+  header:
+    bold: true
+  column_width: "auto"
+  chart:
+    width: 480
+    height: 290
+    style: 10
+    colors:
+      - "4472C4"
+      - "ED7D31"
+      - "A5A5A5"
+      - "FFC000"
+      - "5B9BD5"
+
+validation:
+  rules:
+    - name: data_not_empty
+      type: assert
+      field: data
+      message: "Data array must not be empty"
+    - name: data_min_rows
+      type: assert
+      field: data
+      message: "Data must have at least 2 rows (labels + 1 series)"
+    - name: data_min_cols
+      type: assert
+      field: data
+      message: "Data must have at least 2 columns (labels + 1 value)"
+    - name: chart_type_valid
+      type: enum
+      field: chart_type
+      values: ["bar", "line", "pie"]
+      message: "Chart type must be one of: bar, line, pie"
+    - name: chart_type_for_pie
+      type: custom
+      field: chart_type
+      depends_on: data
+      message: "Pie charts require exactly 2 columns (labels + values)"
