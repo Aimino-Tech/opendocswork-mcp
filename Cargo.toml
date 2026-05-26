@@ -7,8 +7,8 @@ homepage = "https://github.com/Aimino-Tech/opendocswork-mcp"
 repository = "https://github.com/Aimino-Tech/opendocswork-mcp"
 documentation = "https://github.com/Aimino-Tech/opendocswork-mcp"
 readme = "README.md"
-keywords = ["mcp", "office", "ooxml", "excel", "word", "powerpoint"]
-categories = ["command-line-utilities", "development-tools::mcp"]
+keywords = ["mcp", "office", "ooxml", "excel", "word"]
+categories = ["command-line-utilities"]
 license = "GPL-3.0-only"
 exclude = [
     ".editorconfig",

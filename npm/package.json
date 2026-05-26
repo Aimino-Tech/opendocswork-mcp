@@ -1,0 +1,33 @@
+{
+  "name": "@aimino/opendocswork-mcp",
+  "version": "0.2.0",
+  "description": "Rust-native MCP server for Office document processing — sub-millisecond, local-first, open source",
+  "bin": {
+    "opendocswork-mcp": "run.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aimino-Tech/opendocswork-mcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "office",
+    "ooxml",
+    "excel",
+    "word",
+    "powerpoint",
+    "rust"
+  ],
+  "author": "Aimino Tech GmbH",
+  "license": "GPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/Aimino-Tech/opendocswork-mcp/issues"
+  },
+  "homepage": "https://github.com/Aimino-Tech/opendocswork-mcp#readme",
+  "engines": {
+    "node": ">=16"
+  }
+}

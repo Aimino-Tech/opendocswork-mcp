@@ -1,0 +1,35 @@
+[project]
+name = "opendocswork-mcp"
+version = "0.2.0"
+description = "Rust-native MCP server for Office document processing — sub-millisecond, local-first, open source"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-only"
+authors = [
+    { name = "Aimino Tech GmbH", email = "hello@aimino.de" },
+]
+keywords = ["mcp", "office", "ooxml", "excel", "word"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Rust",
+    "Topic :: Office/Business :: Office Suites",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Aimino-Tech/opendocswork-mcp"
+Repository = "https://github.com/Aimino-Tech/opendocswork-mcp"
+Documentation = "https://github.com/Aimino-Tech/opendocswork-mcp"
+
+[project.scripts]
+opendocswork-mcp = "opendocswork_mcp.__main__:main"
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["python"]

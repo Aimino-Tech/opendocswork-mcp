@@ -21,7 +21,7 @@ use std::collections::HashMap;
 use std::io::{Read, Write};
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use office_oxide_mcp::validation::ValidationEngine;
+use opendocswork_mcp::validation::ValidationEngine;
 
 use crate::coherence::{
     CoherenceEngine, ConsistencyCheckRequest, EntityGraphRequest, PropagateEditRequest,
