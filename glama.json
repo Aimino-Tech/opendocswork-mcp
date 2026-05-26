@@ -1,0 +1,19 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "name": "opendocswork-mcp",
+  "description": "Rust-native MCP server for Office document processing (Excel, Word, PowerPoint). Sub-millisecond, local-first, open source alternative to Aspose.",
+  "categories": [
+    "File System",
+    "Productivity",
+    "Development"
+  ],
+  "github": "https://github.com/Aimino-Tech/opendocswork-mcp",
+  "package": {
+    "npm": "@aimino/opendocswork-mcp",
+    "cargo": "opendocswork-mcp",
+    "pypi": "opendocswork-mcp"
+  },
+  "args": [],
+  "env": {},
+  "icon": "https://raw.githubusercontent.com/Aimino-Tech/opendocswork-mcp/main/showcase/icon.svg"
+}
