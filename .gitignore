@@ -15,3 +15,4 @@ scripts/bench_results.json
 /target
 target/
 target/criterion/
+*.egg-info/
