@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>opendocswork-mcp — Hero Showcase</title>
+<meta name="description" content="Rapid-fire showcase of opendocswork-mcp: Rust-native MCP server for Office document processing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Sora',system-ui,-apple-system,sans-serif;background:#080c14;color:#e6edf3;line-height:1.4;user-select:none}
+
+/* ===== CAROUSEL CONTAINER ===== */
+.carousel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#080c14;overflow:hidden}
+
+/* animated gradient background */
+.carousel::before{content:'';position:absolute;inset:0;opacity:.12;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,#1e3a5f 0%,transparent 70%),
+             radial-gradient(ellipse 60% 50% at 30% 70%,#2d1b69 0%,transparent 60%),
+             radial-gradient(ellipse 50% 40% at 70% 30%,#0f3d3a 0%,transparent 50%);
+  animation::gradientShift 8s ease-in-out infinite alternate}
+
+@keyframes gradientShift{0%{opacity:.1;transform:scale(1)}100%{opacity:.18;transform:scale(1.1)}}
+
+/* noise overlay */
+.carousel::after{content:'';position:absolute;inset:0;opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:256px 256px;pointer-events:none}
+
+/* ===== SLIDE TRACK ===== */
+.track{position:relative;width:min(92vw,820px);height:min(80vh,620px);perspective:1200px}
+
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#141b2b 0%,#1a2340 100%);
+  border:1px solid rgba(88,166,255,.12);border-radius:20px;
+  padding:clamp(20px,4vw,48px);text-align:center;
+  opacity:0;transform:scale(.92) translateY(12px);pointer-events:none;
+  transition:opacity .35s ease,transform .35s ease;will-change:transform,opacity;
+  box-shadow:0 0 40px rgba(88,166,255,.04),inset 0 1px 0 rgba(255,255,255,.04)}
+
+.slide.active{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}
+
+/* slide inner */
+.slide-inner{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.5vh,20px)}
+
+/* ===== IMAGE SLIDE (use cases) ===== */
+.slide-img{position:absolute;inset:0;border-radius:20px;overflow:hidden;background:#0d1117}
+.slide-img img{width:100%;height:100%;object-fit:contain;object-position:center;padding:8px}
+.slide-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,12,20,.85) 0%,transparent 25%,transparent 60%,rgba(8,12,20,.9) 100%)}
+
+.slide-img-label{position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:clamp(16px,3vw,36px)}
+
+.slide-img-label .use-case-title{font-size:clamp(1rem,2.5vw,1.75rem);font-weight:700;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.5);margin-bottom:4px}
+.slide-img-label .use-case-meta{font-size:clamp(.7rem,1.2vw,.85rem);color:rgba(255,255,255,.7);font-family:'JetBrains Mono',monospace;text-shadow:0 1px 8px rgba(0,0,0,.4)}
+
+/* ===== TOOL SLIDES ===== */
+.tool-icon{width:clamp(36px,4vw,56px);height:clamp(36px,4vw,56px);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:clamp(1.1rem,2vw,1.6rem);font-weight:700;flex-shrink:0;margin-bottom:4px}
+.tool-icon.read{background:rgba(88,166,255,.15);color:#58a6ff}
+.tool-icon.write{background:rgba(63,185,80,.15);color:#3fb950}
+.tool-icon.validate{background:rgba(210,153,34,.15);color:#d29922}
+.tool-icon.skill{background:rgba(188,140,255,.15);color:#bc8cff}
+.tool-icon.coherence{background:rgba(247,129,102,.15);color:#f78166}
+
+.tool-name{font-size:clamp(1.4rem,3.5vw,2.6rem);font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#e6edf3 0%,#8b949e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+.tool-desc{font-size:clamp(.8rem,1.5vw,1.05rem);color:#8b949e;max-width:600px}
+
+.tool-tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.tag{display:inline-block;padding:3px 12px;border-radius:999px;font-size:clamp(.6rem,1vw,.75rem);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.tag-read{background:rgba(88,166,255,.15);color:#58a6ff;border:1px solid rgba(88,166,255,.2)}
+.tag-write{background:rgba(63,185,80,.15);color:#3fb950;border:1px solid rgba(63,185,80,.2)}
+.tag-validate{background:rgba(210,153,34,.15);color:#d29922;border:1px solid rgba(210,153,34,.2)}
+.tag-skill{background:rgba(188,140,255,.15);color:#bc8cff;border:1px solid rgba(188,140,255,.2)}
+.tag-coherence{background:rgba(247,129,102,.15);color:#f78166;border:1px solid rgba(247,129,102,.2)}
+.tag-xlsx{background:rgba(63,185,80,.1);color:#3fb950;border:1px solid rgba(63,185,80,.15)}
+.tag-docx{background:rgba(88,166,255,.1);color:#58a6ff;border:1px solid rgba(88,166,255,.15)}
+.tag-pptx{background:rgba(188,140,255,.1);color:#bc8cff;border:1px solid rgba(188,140,255,.15)}
+.tag-pdf{background:rgba(247,129,102,.1);color:#f78166;border:1px solid rgba(247,129,102,.15)}
+
+/* code snippet */
+.code-block{width:100%;max-width:560px;margin-top:4px}
+.code-block pre{background:rgba(13,17,23,.7);border:1px solid rgba(48,54,61,.5);border-radius:10px;padding:clamp(8px,1.5vw,14px) clamp(12px,2vw,18px);overflow:hidden;text-align:left;font-size:clamp(.6rem,1.1vw,.78rem);font-family:'JetBrains Mono',monospace;color:#7d8590;line-height:1.5;white-space:nowrap}
+.code-block pre .key{color:#79c0ff}
+.code-block pre .string{color:#a5d6ff}
+.code-block pre .num{color:#79c0ff}
+.code-block pre .brace{color:#e6edf3}
+.code-block pre .method{color:#d2a8ff}
+
+/* ===== PROGRESS ===== */
+.progress{position:fixed;bottom:clamp(16px,4vh,40px);left:50%;transform:translateX(-50%);display:flex;gap:4px;align-items:center;z-index:10}
+.progress-dot{width:clamp(4px,.5vw,7px);height:clamp(4px,.5vw,7px);border-radius:50%;background:rgba(255,255,255,.15);transition:all .2s;cursor:pointer}
+.progress-dot.active{background:#58a6ff;box-shadow:0 0 8px rgba(88,166,255,.4);width:clamp(14px,1.5vw,24px);border-radius:99px}
+.progress-dot.passed{background:rgba(88,166,255,.3)}
+.progress-dot:hover{background:rgba(88,166,255,.5)}
+
+/* ===== COUNTER ===== */
+.counter{position:fixed;top:clamp(12px,2vh,24px);right:clamp(12px,2vw,24px);z-index:10;font-family:'JetBrains Mono',monospace;font-size:clamp(.7rem,1.1vw,.85rem);color:rgba(255,255,255,.25);letter-spacing:.05em}
+
+/* ===== BRAND ===== */
+.brand{position:fixed;top:clamp(12px,2vh,24px);left:clamp(12px,2vw,24px);z-index:10;display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-logo{width:clamp(24px,2.5vw,36px);height:clamp(24px,2.5vw,36px);border-radius:8px;background:linear-gradient(135deg,#58a6ff,#bc8cff);display:flex;align-items:center;justify-content:center;font-size:clamp(.7rem,1.2vw,.9rem);font-weight:800;color:#fff}
+.brand-name{font-size:clamp(.7rem,1.2vw,.9rem);font-weight:600;color:rgba(255,255,255,.5);letter-spacing:-.01em}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+  .track{width:96vw;height:70vh}
+  .code-block pre{font-size:.55rem;padding:8px 10px;white-space:normal;word-break:break-all}
+  .slide{border-radius:14px;padding:16px}
+  .slide-img img{padding:4px}
+}
+
+/* ===== PAUSED STATE ===== */
+.carousel.paused .slide.active{transition:opacity 1s ease,transform 1s ease}
+.carousel.paused .progress{opacity:1}
+
+/* ===== FPS COUNTER ===== */
+.fps{position:fixed;bottom:clamp(48px,8vh,70px);left:50%;transform:translateX(-50%);z-index:10;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.08);pointer-events:none}
+</style>
+</head>
+<body>
+
+<div class="carousel" id="carousel">
+  <div class="track" id="track"></div>
+</div>
+
+<div class="brand">
+  <div class="brand-logo">O</div>
+  <span class="brand-name">opendocswork-mcp</span>
+</div>
+
+<div class="counter" id="counter">0 / 0</div>
+
+<div class="progress" id="progress"></div>
+<div class="fps" id="fps">⚡ 600ms</div>
+
+<script>
+// ===== SLIDE DATA =====
+const slides = [
+  // ── MCP TOOLS ──
+  { type:'tool', icon:'R', iconClass:'read', name:'get_document_info', desc:'Inspect metadata of DOCX, XLSX, PPTX files', tags:['Read'], method:'get_document_info', params:'{"file_path":"report.xlsx"}' },
+  { type:'tool', icon:'R', iconClass:'read', name:'office_read', desc:'Read Office docs to JSON, Markdown, or chunked output', tags:['Read'], method:'office_read', params:'{"file_path":"contract.docx","output_format":"markdown"}' },
+  { type:'tool', icon:'W', iconClass:'skill', name:'skill_run — word.invoice', desc:'Generate a professional invoice with line items', tags:['Write','Skill'], method:'skill_run', params:'{"skill_name":"word.invoice","data":"{…}"}' },
+  { type:'tool', icon:'W', iconClass:'skill', name:'skill_run — excel.basic', desc:'Generate a formatted Excel workbook from data', tags:['Write','Skill'], method:'skill_run', params:'{"skill_name":"excel.basic","data":"{…}"}' },
+  { type:'tool', icon:'W', iconClass:'skill', name:'skill_run — ppt.deck', desc:'Generate a PowerPoint deck from slide outline', tags:['Write','Skill'], method:'skill_run', params:'{"skill_name":"ppt.deck","data":"{…}"}' },
+  { type:'tool', icon:'C', iconClass:'coherence', name:'office_propagate_edit', desc:'Update entity values & cascade to all dependents', tags:['Coherence'], method:'office_propagate_edit', params:'{"entity_id":"company_name","new_value":"Acme Corp"}' },
+  { type:'tool', icon:'V', iconClass:'validate', name:'skill_validate', desc:'Validate documents against skill rules', tags:['Validate'], method:'skill_validate', params:'{"skill_name":"word.report","file_path":"report.docx"}' },
+  { type:'tool', icon:'F', iconClass:'read', name:'list_formats', desc:'List all supported Office document formats', tags:['Read'], method:'list_formats', params:{} },
+
+  // ── USE CASES ──
+  { type:'image', img:'previews/01-pnl.png', title:'Profit & Loss Statement', meta:'XLSX · excel.basic', format:'xlsx' },
+  { type:'image', img:'previews/02-kpi.png', title:'Executive KPI Dashboard', meta:'XLSX · excel.basic', format:'xlsx' },
+  { type:'image', img:'previews/03-budget.png', title:'Budget vs Actual Variance', meta:'XLSX · excel.basic', format:'xlsx' },
+  { type:'image', img:'previews/04-balance.png', title:'Balance Sheet with Ratios', meta:'XLSX · excel.basic', format:'xlsx' },
+  { type:'image', img:'previews/05-invoice.png', title:'Invoice with Line Items', meta:'DOCX · word.invoice', format:'docx' },
+  { type:'image', img:'previews/06-pdfexport.png', title:'Financial Report PDF Export', meta:'PDF · office_export_pdf', format:'pdf' },
+  { type:'image', img:'previews/10-forecast.png', title:'Revenue Forecast Model', meta:'XLSX · excel.basic', format:'xlsx' },
+  { type:'image', img:'previews/11-cost.png', title:'Cost Analysis Dashboard', meta:'XLSX · excel.basic', format:'xlsx' },
+  { type:'image', img:'previews/15-report.png', title:'Annual Business Report', meta:'DOCX · word.report', format:'docx' },
+  { type:'image', img:'previews/16-strategy.png', title:'Digital Strategy Report', meta:'DOCX · word.report', format:'docx' },
+  { type:'image', img:'previews/17-contract.png', title:'IT Service Agreement', meta:'DOCX · word.report', format:'docx' },
+  { type:'image', img:'previews/01-strategy-consulting-pitch.png', title:'Strategy Consulting Pitch Deck', meta:'PPTX · ppt.deck', format:'pptx' },
+  { type:'image', img:'previews/02-cfo-qbr-review.png', title:'CFO Quarterly Business Review', meta:'PPTX · ppt.deck', format:'pptx' },
+  { type:'image', img:'previews/03-product-launch-strategy.png', title:'Product Launch Strategy Deck', meta:'PPTX · ppt.deck', format:'pptx' },
+  { type:'image', img:'previews/04-ma-target-analysis.png', title:'M&A Target Analysis Deck', meta:'PPTX · ppt.deck', format:'pptx' },
+  { type:'image', img:'previews/05-digital-transformation.png', title:'Digital Transformation Roadmap', meta:'PPTX · ppt.deck', format:'pptx' },
+];
+
+const TOTAL = slides.length;
+const INTERVAL = 600; // ms per slide
+let current = 0;
+let timer;
+let isPaused = false;
+
+const track = document.getElementById('track');
+const progress = document.getElementById('progress');
+const counter = document.getElementById('counter');
+
+// build progress dots
+for (let i = 0; i < TOTAL; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'progress-dot' + (i === 0 ? ' active' : '');
+  dot.dataset.index = i;
+  dot.addEventListener('click', () => goTo(i));
+  progress.appendChild(dot);
+}
+
+function fmtJSON(method, params) {
+  const p = JSON.stringify(params, null, 1).replace(/\n\s*/g, ' ');
+  return `{ "method": "${method}", "params": ${p} }`;
+}
+
+function buildSlide(data, idx) {
+  const el = document.createElement('div');
+  el.className = 'slide' + (idx === 0 ? ' active' : '');
+  el.dataset.index = idx;
+
+  if (data.type === 'tool') {
+    const tagClass = data.tags.length === 1
+      ? data.tags[0].toLowerCase()
+      : 'skill';
+    el.innerHTML = `
+      <div class="slide-inner">
+        <div class="tool-icon ${data.iconClass}">${data.icon}</div>
+        <div class="tool-tags">${data.tags.map(t => `<span class="tag tag-${t.toLowerCase()}">${t}</span>`).join('')}</div>
+        <div class="tool-name">${data.name.replace(/ — /g, '<br>').replace(/\./g, '.<wbr>')}</div>
+        <div class="tool-desc">${data.desc}</div>
+        <div class="code-block"><pre>${fmtJSON(data.method, data.params)}</pre></div>
+      </div>`;
+  } else {
+    const fmtClass = data.format === 'xlsx' ? 'tag-xlsx' : data.format === 'docx' ? 'tag-docx' : data.format === 'pptx' ? 'tag-pptx' : 'tag-pdf';
+    el.innerHTML = `
+      <div class="slide-img">
+        <img src="${data.img}" alt="${data.title}" loading="lazy">
+        <div class="slide-img-overlay"></div>
+      </div>
+      <div class="slide-img-label">
+        <div class="use-case-title">${data.title}</div>
+        <div class="use-case-meta"><span class="tag ${fmtClass}">${data.format.toUpperCase()}</span> ${data.meta}</div>
+      </div>`;
+  }
+  return el;
+}
+
+// render all slides
+slides.forEach((data, i) => track.appendChild(buildSlide(data, i)));
+
+function goTo(idx) {
+  const prev = current;
+  current = ((idx % TOTAL) + TOTAL) % TOTAL;
+
+  const allSlides = track.querySelectorAll('.slide');
+  const allDots = progress.querySelectorAll('.progress-dot');
+
+  allSlides.forEach((el, i) => {
+    el.classList.toggle('active', i === current);
+  });
+  allDots.forEach((dot, i) => {
+    dot.className = 'progress-dot' + (i === current ? ' active' : i < current ? ' passed' : '');
+  });
+
+  counter.textContent = `${current + 1} / ${TOTAL}`;
+}
+
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
+
+function startTimer() {
+  stopTimer();
+  timer = setInterval(next, INTERVAL);
+}
+
+function stopTimer() {
+  if (timer) { clearInterval(timer); timer = null; }
+}
+
+// pause on interaction
+const carousel = document.getElementById('carousel');
+carousel.addEventListener('mouseenter', () => { isPaused = true; carousel.classList.add('paused'); stopTimer(); });
+carousel.addEventListener('mouseleave', () => { isPaused = false; carousel.classList.remove('paused'); startTimer(); });
+carousel.addEventListener('touchstart', () => { isPaused = true; carousel.classList.add('paused'); stopTimer(); });
+document.addEventListener('click', (e) => {
+  if (isPaused && !e.target.closest('.progress-dot') && !e.target.closest('.brand')) {
+    isPaused = false;
+    carousel.classList.remove('paused');
+    startTimer();
+  }
+});
+
+// keyboard nav
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') { stopTimer(); next(); startTimer(); }
+  if (e.key === 'ArrowLeft') { stopTimer(); prev(); startTimer(); }
+  if (e.key === ' ') { e.preventDefault(); if (isPaused) { isPaused = false; carousel.classList.remove('paused'); startTimer(); } else { isPaused = true; carousel.classList.add('paused'); stopTimer(); } }
+});
+
+// init
+counter.textContent = `1 / ${TOTAL}`;
+startTimer();
+
+// preload images
+slides.filter(s => s.type === 'image').forEach(s => {
+  const img = new Image();
+  img.src = s.img;
+});
+</script>
+</body>
+</html>
