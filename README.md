@@ -10,6 +10,12 @@ Sub-millisecond, local-first, open source — the "open source Aspose."
 
 ---
 
+<p align="center">
+  <img src="showcase/hero.gif" alt="opendocswork-mcp in action — 8 MCP tools and 16 use cases at 600ms/slide" width="100%">
+</p>
+
+---
+
 ## Quick Start
 
 ```bash
