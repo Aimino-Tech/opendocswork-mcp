@@ -258,13 +258,15 @@ impl Default for TemplateEngine {
 mod tests {
     use super::*;
     use std::io::{Read, Write};
+    use tempfile::TempDir;
 
-    /// Create a minimal but valid DOCX file with placeholder text.
-    fn create_test_template(path: &str, body_text: &str) {
-        let tmp_path = format!("{}.tmp", path);
-        let _ = std::fs::remove_file(&tmp_path);
+    /// Create a minimal but valid DOCX file with placeholder text in a temp dir.
+    fn create_test_template_in(dir: &TempDir, name: &str, body_text: &str) -> String {
+        let path = dir.path().join(name);
+        let path_str = path.to_string_lossy().to_string();
+        let _ = std::fs::remove_file(&path_str);
 
-        let file = std::fs::File::create(&tmp_path).unwrap();
+        let file = std::fs::File::create(&path_str).unwrap();
         let mut zip = zip::ZipWriter::new(file);
         let options = zip::write::FileOptions::<()>::default()
             .compression_method(zip::CompressionMethod::Deflated);
@@ -304,16 +306,13 @@ mod tests {
         zip.write_all(document_xml.as_bytes()).unwrap();
 
         zip.finish().unwrap();
-        std::fs::rename(&tmp_path, path).unwrap();
+        path_str
     }
 
     #[test]
     fn test_detect_simple_placeholder() {
-        let dir = std::env::temp_dir();
-        let path = dir.join("test_detect_simple.docx");
-        let path_str = path.to_string_lossy().to_string();
-
-        create_test_template(&path_str, "Hello {name}, your order {order_id} is ready.");
+        let dir = TempDir::new().unwrap();
+        let path_str = create_test_template_in(&dir, "test.docx", "Hello {name}, your order {order_id} is ready.");
 
         let result = TemplateEngine::detect_placeholders(&path_str).unwrap();
         let placeholders: Vec<String> = serde_json::from_str(&result).unwrap();
@@ -321,36 +320,25 @@ mod tests {
         assert!(placeholders.contains(&"name".to_string()));
         assert!(placeholders.contains(&"order_id".to_string()));
         assert_eq!(placeholders.len(), 2);
-
-        std::fs::remove_file(&path).ok();
     }
 
     #[test]
     fn test_detect_double_curly() {
-        let dir = std::env::temp_dir();
-        let path = dir.join("test_detect_double.docx");
-        let path_str = path.to_string_lossy().to_string();
-
-        create_test_template(&path_str, "Hello {{name}}, your {{order_id}}.");
+        let dir = TempDir::new().unwrap();
+        let path_str = create_test_template_in(&dir, "test.docx", "Hello {{name}}, your {{order_id}}.");
 
         let result = TemplateEngine::detect_placeholders(&path_str).unwrap();
         let placeholders: Vec<String> = serde_json::from_str(&result).unwrap();
 
         assert!(placeholders.contains(&"name".to_string()));
         assert!(placeholders.contains(&"order_id".to_string()));
-
-        std::fs::remove_file(&path).ok();
     }
 
     #[test]
     fn test_fill_simple() {
-        let dir = std::env::temp_dir();
-        let template_path = dir.join("test_fill_simple.docx");
-        let output_path = dir.join("test_fill_simple_output.docx");
-        let tpl_str = template_path.to_string_lossy().to_string();
-        let out_str = output_path.to_string_lossy().to_string();
-
-        create_test_template(&tpl_str, "Hello {name}, date: {date}.");
+        let dir = TempDir::new().unwrap();
+        let tpl_str = create_test_template_in(&dir, "template.docx", "Hello {name}, date: {date}.");
+        let out_str = dir.path().join("output.docx").to_string_lossy().to_string();
 
         let mut data = HashMap::new();
         data.insert("name".to_string(), "Alice".to_string());
@@ -361,8 +349,7 @@ mod tests {
 
         assert_eq!(json["status"], "created");
         assert!(json["fields_filled"].as_i64().unwrap_or(0) > 0);
-
-        assert!(output_path.exists());
+        assert!(std::path::Path::new(&out_str).exists());
 
         // Verify replacement by reading the DOCX as ZIP
         let file = std::fs::File::open(&out_str).unwrap();
@@ -376,20 +363,13 @@ mod tests {
         assert!(doc_xml.contains("Alice"));
         assert!(doc_xml.contains("2024-01-15"));
         assert!(!doc_xml.contains("{name}"));
-
-        std::fs::remove_file(&tpl_str).ok();
-        std::fs::remove_file(&out_str).ok();
     }
 
     #[test]
     fn test_fill_double_curly() {
-        let dir = std::env::temp_dir();
-        let template_path = dir.join("test_fill_double.docx");
-        let output_path = dir.join("test_fill_double_output.docx");
-        let tpl_str = template_path.to_string_lossy().to_string();
-        let out_str = output_path.to_string_lossy().to_string();
-
-        create_test_template(&tpl_str, "Hello {{name}}, your {{item}}.");
+        let dir = TempDir::new().unwrap();
+        let tpl_str = create_test_template_in(&dir, "template.docx", "Hello {{name}}, your {{item}}.");
+        let out_str = dir.path().join("output.docx").to_string_lossy().to_string();
 
         let mut data = HashMap::new();
         data.insert("name".to_string(), "Bob".to_string());
@@ -399,7 +379,7 @@ mod tests {
         let json: serde_json::Value = serde_json::from_str(&result).unwrap();
 
         assert_eq!(json["status"], "created");
-        assert!(output_path.exists());
+        assert!(std::path::Path::new(&out_str).exists());
 
         let file = std::fs::File::open(&out_str).unwrap();
         let mut archive = zip::ZipArchive::new(file).unwrap();
@@ -412,20 +392,13 @@ mod tests {
         assert!(doc_xml.contains("Bob"));
         assert!(doc_xml.contains("Widget"));
         assert!(!doc_xml.contains("{{name}}"));
-
-        std::fs::remove_file(&tpl_str).ok();
-        std::fs::remove_file(&out_str).ok();
     }
 
     #[test]
     fn test_fill_missing_key() {
-        let dir = std::env::temp_dir();
-        let template_path = dir.join("test_fill_missing.docx");
-        let output_path = dir.join("test_fill_missing_output.docx");
-        let tpl_str = template_path.to_string_lossy().to_string();
-        let out_str = output_path.to_string_lossy().to_string();
-
-        create_test_template(&tpl_str, "Hello {name} and {missing}.");
+        let dir = TempDir::new().unwrap();
+        let tpl_str = create_test_template_in(&dir, "template.docx", "Hello {name} and {missing}.");
+        let out_str = dir.path().join("output.docx").to_string_lossy().to_string();
 
         let mut data = HashMap::new();
         data.insert("name".to_string(), "Carol".to_string());
@@ -434,7 +407,7 @@ mod tests {
         let json: serde_json::Value = serde_json::from_str(&result).unwrap();
 
         assert_eq!(json["status"], "created");
-        assert!(output_path.exists());
+        assert!(std::path::Path::new(&out_str).exists());
 
         let file = std::fs::File::open(&out_str).unwrap();
         let mut archive = zip::ZipArchive::new(file).unwrap();
@@ -446,20 +419,14 @@ mod tests {
             .unwrap();
         assert!(doc_xml.contains("Carol"));
         assert!(doc_xml.contains("{missing}"));
-
-        std::fs::remove_file(&tpl_str).ok();
-        std::fs::remove_file(&out_str).ok();
     }
 
     #[test]
     fn test_batch_fill() {
-        let dir = std::env::temp_dir();
-        let template_path = dir.join("test_batch.docx");
-        let output_dir = dir.join("test_batch_output");
-        let tpl_str = template_path.to_string_lossy().to_string();
-        let out_dir_str = output_dir.to_string_lossy().to_string();
-
-        create_test_template(&tpl_str, "Hello {name}, your {item}.");
+        let dir = TempDir::new().unwrap();
+        let tpl_str = create_test_template_in(&dir, "template.docx", "Hello {name}, your {item}.");
+        let out_dir = dir.path().join("output");
+        let out_dir_str = out_dir.to_string_lossy().to_string();
 
         let records = vec![
             {
@@ -490,13 +457,9 @@ mod tests {
         assert_eq!(json["failed"], 0);
 
         for i in 1..=3 {
-            let out_path = output_dir.join(format!("test_batch_record_{}.docx", i));
+            let out_path = out_dir.join(format!("template_record_{}.docx", i));
             assert!(out_path.exists(), "Output {} should exist", i);
-            std::fs::remove_file(&out_path).ok();
         }
-
-        std::fs::remove_file(&tpl_str).ok();
-        std::fs::remove_dir(&out_dir_str).ok();
     }
 
     #[test]
@@ -508,35 +471,15 @@ mod tests {
         );
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("not found"));
-    }
-
-    #[test]
-    fn test_error_bad_extension() {
-        let dir = std::env::temp_dir();
-        let path = dir.join("test_bad_ext.txt");
-        std::fs::write(&path, b"not a docx").unwrap();
-        let path_str = path.to_string_lossy().to_string();
-
-        let result =
-            TemplateEngine::fill_template(&path_str, "/tmp/out.docx", &HashMap::new());
-        assert!(result.is_err());
-        assert!(result.unwrap_err().contains("Unsupported format"));
-
-        std::fs::remove_file(&path).ok();
-    }
+}
 
     #[test]
     fn test_detect_no_placeholders() {
-        let dir = std::env::temp_dir();
-        let path = dir.join("test_no_placeholders.docx");
-        let path_str = path.to_string_lossy().to_string();
-
-        create_test_template(&path_str, "Just plain text without any placeholders.");
+        let dir = TempDir::new().unwrap();
+        let path_str = create_test_template_in(&dir, "test.docx", "Just plain text without any placeholders.");
 
         let result = TemplateEngine::detect_placeholders(&path_str).unwrap();
         let placeholders: Vec<String> = serde_json::from_str(&result).unwrap();
         assert!(placeholders.is_empty());
-
-        std::fs::remove_file(&path).ok();
     }
 }

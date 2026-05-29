@@ -1,15 +1,15 @@
 [package]
-name = "opendocswork-mcp"
+name = "office-oxide-mcp"
 version = "0.2.0"
 edition = "2021"
-description = "Rust-native MCP server for Office document processing (Excel, Word, PowerPoint). Sub-millisecond, local-first, open source alternative to Aspose."
-homepage = "https://github.com/Aimino-Tech/opendocswork-mcp"
-repository = "https://github.com/Aimino-Tech/opendocswork-mcp"
-documentation = "https://github.com/Aimino-Tech/opendocswork-mcp"
+description = "Rust-native MCP server for Office document processing (Excel, Word, PowerPoint, PDF). Sub-millisecond, local-first, open source alternative to Aspose."
+homepage = "https://github.com/Aimino-Tech/office-oxide-mcp"
+repository = "https://github.com/Aimino-Tech/office-oxide-mcp"
+documentation = "https://github.com/Aimino-Tech/office-oxide-mcp"
 readme = "README.md"
-keywords = ["mcp", "office", "ooxml", "excel", "word"]
-categories = ["command-line-utilities"]
-license = "GPL-3.0-only"
+keywords = ["mcp", "office", "ooxml", "excel", "word", "powerpoint", "pdf"]
+categories = ["command-line-utilities", "development-tools::mcp"]
+license = "MIT OR Apache-2.0"
 exclude = [
     ".editorconfig",
     "docker-compose.yml",
@@ -41,10 +41,13 @@ regex = "1"
 async-trait = "0.1"
 office_oxide = "0.1"
 serde_yaml = "0.9"
-lopdf = "0.34"
+lopdf = "0.35"
 printpdf = "0.8"
 similar = "2"
 rayon = "1"
 
+[dev-dependencies]
+tempfile = "3"
 
-
+[patch.crates-io]
+lopdf = { path = "vendor/lopdf" }

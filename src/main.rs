@@ -21,7 +21,7 @@ use std::collections::HashMap;
 use std::io::{Read, Write};
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use opendocswork_mcp::validation::ValidationEngine;
+use office_oxide_mcp::validation::ValidationEngine;
 
 use crate::coherence::{
     CoherenceEngine, ConsistencyCheckRequest, EntityGraphRequest, PropagateEditRequest,
@@ -122,6 +122,32 @@ struct PdfListFieldsRequest {
     file_path: String,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, schemars::JsonSchema)]
+struct PdfAnalyzeLayoutRequest {
+    file_path: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, schemars::JsonSchema)]
+struct PdfOverlayTextRequest {
+    file_path: String,
+    output_path: String,
+    fields: Vec<TextFieldOverlayParam>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, schemars::JsonSchema)]
+struct TextFieldOverlayParam {
+    page: u32,
+    #[serde(default)]
+    x: f64,
+    #[serde(default)]
+    y: f64,
+    text: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    font_size: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    font_name: Option<String>,
+}
+
 // ── Template Engine request structs ──────────────────────────
 
 #[derive(Debug, Clone, Serialize, Deserialize, schemars::JsonSchema)]
@@ -160,7 +186,7 @@ impl OfficeService {
     }
 
     fn is_supported(ext: &str) -> bool {
-        matches!(ext, "docx" | "xlsx" | "pptx" | "doc" | "xls" | "ppt")
+        matches!(ext, "docx" | "xlsx" | "pptx" | "doc" | "xls" | "ppt" | "pdf")
     }
 
     fn json_content(value: impl serde::Serialize) -> Result<Content, ErrorData> {
@@ -179,6 +205,7 @@ impl OfficeService {
     #[tool(description = "List all supported Office document formats with capabilities")]
     async fn list_formats(&self) -> Result<Content, ErrorData> {
         let formats = serde_json::json!([
+            {"extension": "pdf", "name": "PDF Document", "read": true, "write": false, "reader": "lopdf + office_oxide (native)", "tools": ["office_read", "office_fill_pdf_form", "office_list_pdf_fields", "office_overlay_pdf_text", "office_analyze_pdf_layout"]},
             {"extension": "docx", "name": "Word Document", "read": true, "write": false, "reader": "EPIC-1 Word (AIM-877)"},
             {"extension": "doc", "name": "Word 97-2003 Document", "read": true, "write": false, "reader": "EPIC-1 Word (AIM-877)"},
             {"extension": "xlsx", "name": "Excel Workbook", "read": false, "write": false},
@@ -247,7 +274,7 @@ impl OfficeService {
     }
 
     #[tool(
-        description = "Read content from an Office document. Output formats: json, markdown, chunks"
+        description = "Read content from an Office document or PDF. Output formats: json, markdown, chunks. PDF also supports 'text' format. For PDFs with form fields, use office_list_pdf_fields first to see available fields."
     )]
     async fn office_read(
         &self,
@@ -289,14 +316,28 @@ impl OfficeService {
             ("pptx" | "ppt", "markdown") => readers::powerpoint::read_ppt_to_md(&req.file_path),
             ("pptx" | "ppt", "chunks") => readers::powerpoint::read_ppt_to_chunks(&req.file_path)
                 .map(|chunks| serde_json::to_string_pretty(&chunks).unwrap()),
+            ("pdf", "markdown") => pdf_form::read_pdf_to_md(&req.file_path),
+            ("pdf", "text") => pdf_form::read_pdf_text(&req.file_path),
+            ("pdf", "json") => pdf_form::read_pdf_json(&req.file_path),
+            ("pdf", "chunks") => pdf_form::read_pdf_chunks(&req.file_path)
+                .map(|chunks| serde_json::to_string_pretty(&chunks).unwrap()),
             _ => {
                 let supported: Vec<&str> = vec!["docx", "xlsx", "pptx", "doc", "xls", "ppt"];
                 let valid_formats = if Self::is_supported(&ext) {
-                    vec![
-                        "json".to_string(),
-                        "markdown".to_string(),
-                        "chunks".to_string(),
-                    ]
+                    if ext == "pdf" {
+                        vec![
+                            "markdown".to_string(),
+                            "text".to_string(),
+                            "json".to_string(),
+                            "chunks".to_string(),
+                        ]
+                    } else {
+                        vec![
+                            "json".to_string(),
+                            "markdown".to_string(),
+                            "chunks".to_string(),
+                        ]
+                    }
                 } else {
                     vec![]
                 };
@@ -596,6 +637,92 @@ impl OfficeService {
                 Some(serde_json::json!({"detail": e})),
             )),
         }
+    }
+
+    #[tool(
+        description = "Insert text at specific positions on PDF pages without form fields. Uses content stream overlay to add text to existing PDFs. Specify coordinates in PDF points (72 dpi, bottom-left origin). Supports standard fonts (Helvetica, Times-Roman, Courier)."
+    )]
+    async fn office_overlay_pdf_text(
+        &self,
+        Parameters(req): Parameters<PdfOverlayTextRequest>,
+    ) -> Result<Content, ErrorData> {
+        let path = std::path::Path::new(&req.file_path);
+        if !path.exists() {
+            return Err(ErrorData::invalid_params(
+                "file_not_found",
+                Some(serde_json::json!({"path": req.file_path})),
+            ));
+        }
+        let ext = path
+            .extension()
+            .and_then(|e| e.to_str())
+            .unwrap_or("unknown")
+            .to_lowercase();
+        if ext != "pdf" {
+            return Err(ErrorData::invalid_params(
+                "invalid_extension",
+                Some(serde_json::json!({"expected": "pdf", "got": ext})),
+            ));
+        }
+        if req.fields.is_empty() {
+            return Err(ErrorData::invalid_params(
+                "empty_fields",
+                Some(serde_json::json!({"detail": "At least one field is required"})),
+            ));
+        }
+
+        let fields: Vec<pdf_form::TextFieldOverlay> = req
+            .fields
+            .iter()
+            .map(|f| pdf_form::TextFieldOverlay {
+                page: f.page,
+                x: f.x,
+                y: f.y,
+                text: f.text.clone(),
+                font_size: f.font_size.unwrap_or(11.0),
+                font_name: f.font_name.clone().unwrap_or_else(|| "Helvetica".to_string()),
+            })
+            .collect();
+
+        let filler = pdf_form::FlatPdfFiller::new();
+        match filler.fill_flat_pdf(&req.file_path, &req.output_path, &fields) {
+            Ok(json) => Ok(Content::text(json)),
+            Err(e) => Err(ErrorData::internal_error(
+                "overlay_text_error",
+                Some(serde_json::json!({"detail": e})),
+            )),
+        }
+    }
+
+    #[tool(
+        description = "Analyze a PDF page layout: extract all text with positions, detect form field labels, and suggest overlay coordinates. Use this before office_overlay_pdf_text to find where to place text on flat PDFs."
+    )]
+    async fn office_analyze_pdf_layout(
+        &self,
+        Parameters(req): Parameters<PdfAnalyzeLayoutRequest>,
+    ) -> Result<Content, ErrorData> {
+        let path = std::path::Path::new(&req.file_path);
+        if !path.exists() {
+            return Err(ErrorData::invalid_params(
+                "file_not_found",
+                Some(serde_json::json!({"path": req.file_path})),
+            ));
+        }
+        let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("").to_lowercase();
+        if ext != "pdf" {
+            return Err(ErrorData::invalid_params(
+                "invalid_extension",
+                Some(serde_json::json!({"expected": "pdf", "got": ext})),
+            ));
+        }
+
+        let analysis = pdf_form::PdfFormFiller::analyze_layout(&req.file_path)
+            .map_err(|e| ErrorData::internal_error(
+                "layout_analysis_error",
+                Some(serde_json::json!({"detail": e})),
+            ))?;
+
+        Ok(Content::text(analysis))
     }
 
     // ── New skill tools matching e2e_skills tests ─────────────
@@ -935,7 +1062,7 @@ fn replace_text_in_zip(file_path: &str, replacements: &HashMap<String, String>) 
     result
 }
 
-#[tool_handler(instructions = "Office Document MCP Server — read, validate, fix, export to PDF, and replace text in Office files (DOCX, XLSX, PPTX, DOC, XLS, PPT) and fill PDF forms. Tools: list_formats, get_document_info, office_read, office_validate, office_export_pdf, office_replace_text, office_fix, office_fill_pdf_form, office_list_pdf_fields, increment, get_value. Usage: validate → check report → fix with office_fix using suggested tool/args → re-validate.")]
+#[tool_handler(instructions = "Office Document MCP Server — read, validate, fix, export to PDF, and replace text in Office files (DOCX, XLSX, PPTX, DOC, XLS, PPT, PDF) and fill/manipulate PDFs. Tools: list_formats, get_document_info, office_read (including PDF text extraction), office_validate, office_export_pdf, office_replace_text, office_fix, office_fill_pdf_form, office_list_pdf_fields, office_overlay_pdf_text, increment, get_value. Usage: validate → check report → fix with office_fix using suggested tool/args → re-validate. For PDFs without form fields, use office_overlay_pdf_text with page coordinates. To read PDF content, use office_read with format 'markdown', 'text', 'json', or 'chunks'.")]
 impl ServerHandler for OfficeService {}
 
 fn parse_args() {

@@ -593,6 +593,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires test/fixtures/sample.xlsx fixture file"]
     fn test_read_excel_to_json_basic() {
         let fp = fixture_path("sample.xlsx");
         let path = std::path::Path::new(&fp);
@@ -608,6 +609,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires test/fixtures/sample.xlsx fixture file"]
     fn test_read_excel_to_md_basic() {
         let fp = fixture_path("sample.xlsx");
         let path = std::path::Path::new(&fp);
@@ -618,6 +620,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires test/fixtures/sample.xlsx fixture file"]
     fn test_read_excel_to_chunks_basic() {
         let fp = fixture_path("sample.xlsx");
         let path = std::path::Path::new(&fp);
@@ -631,6 +634,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires test/fixtures/sample.xlsx fixture file"]
     fn test_column_type_inference() {
         let fp = fixture_path("sample.xlsx");
         let path = std::path::Path::new(&fp);
@@ -646,6 +650,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "requires test/fixtures/sample.xlsx fixture file"]
     fn test_named_ranges() {
         let fp = fixture_path("sample.xlsx");
         let path = std::path::Path::new(&fp);

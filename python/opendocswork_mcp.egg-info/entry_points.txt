@@ -1,2 +1,0 @@
-[console_scripts]
-opendocswork-mcp = opendocswork_mcp.__main__:main

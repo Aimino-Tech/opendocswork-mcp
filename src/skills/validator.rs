@@ -194,7 +194,7 @@ fn evaluate_custom_rule(
             _ => false,
         },
         "slide_types_valid" => {
-            let valid_types = ["title", "content", "section", "thank_you", "agenda"];
+            let valid_types = ["title", "content", "section", "thank_you"];
             match params.get("slides") {
                 Some(serde_json::Value::Array(slides)) => slides.iter().all(|slide| {
                     slide
