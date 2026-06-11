@@ -160,6 +160,10 @@ cargo doc --open                      # Docs
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions welcome.
 
+## Be with us!
+
+Join our Discord community to ask questions, share ideas, and get help: [Discord Invite](https://discord.gg/GVYVCwWX)
+
 ## License
 
 MIT OR Apache-2.0 — see [LICENSE](LICENSE).
