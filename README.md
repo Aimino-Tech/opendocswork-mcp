@@ -160,9 +160,13 @@ cargo doc --open                      # Docs
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions welcome.
 
-## Be with us!
-
-Join our Discord community to ask questions, share ideas, and get help: [Discord Invite](https://discord.gg/GVYVCwWX)
+> [!TIP]
+> Be with us!
+>
+> | [<img alt="Discord link" src="https://img.shields.io/discord/1452487457085063218?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square" width="156px" />](https://discord.gg/PUwSMR9XNk) | Join our [Discord community](https://discord.gg/PUwSMR9XNk) to ask questions, share ideas, and get help with office-oxide-mcp. |
+> | :----- | :----- |
+> | [<img alt="GitHub Discussions" src="https://img.shields.io/badge/GitHub-Discussions-181717?style=flat-square&logo=github&labelColor=black" width="156px" />](https://github.com/Aimino-Tech/office-oxide-mcp/discussions) | Prefer GitHub? Start a [discussion](https://github.com/Aimino-Tech/office-oxide-mcp/discussions) or open an issue. |
+> | [<img alt="GitHub Follow" src="https://img.shields.io/github/followers/Aimino-Tech?style=flat-square&logo=github&labelColor=black&color=24292f" width="156px" />](https://github.com/Aimino-Tech) | Follow [@Aimino-Tech](https://github.com/Aimino-Tech) on GitHub for more projects. |
 
 ## License
 
