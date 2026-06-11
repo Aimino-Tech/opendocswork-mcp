@@ -7,6 +7,7 @@ Sub-millisecond, local-first, open source — the "open source Aspose."
 > **Stop filling forms by hand.** Let office-oxide-mcp do it in milliseconds — whether it's a simple AcroForm, a complex XFA form, or a flat scanned PDF where you need coordinates. Your LLM reads the form, you approve, it fills. Done.
 
 <p align="center">
+  <a href="https://discord.gg/GVYVCwWX"><img src="https://img.shields.io/discord/1514222622215241729?color=5865F2&label=Join%20Discord&logo=discord&logoColor=white" alt="Discord"></a>
   <a href="https://github.com/Aimino-Tech/office-oxide-mcp/discussions"><img src="https://img.shields.io/badge/GitHub-Discussions-%23181717?logo=github" alt="GitHub Discussions"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT%2FApache--2.0-blue" alt="License"></a>
 </p>
@@ -18,6 +19,10 @@ Sub-millisecond, local-first, open source — the "open source Aspose."
 > | :----- | :----- |
 > | [<img alt="GitHub Discussions" src="https://img.shields.io/badge/GitHub-Discussions-181717?style=flat-square&logo=github&labelColor=black" width="156px" />](https://github.com/Aimino-Tech/opendocswork-mcp/discussions) | Prefer GitHub? Start a [discussion](https://github.com/Aimino-Tech/opendocswork-mcp/discussions) or open an issue. |
 > | [<img alt="GitHub Follow" src="https://img.shields.io/github/followers/Aimino-Tech?style=flat-square&logo=github&labelColor=black&color=24292f" width="156px" />](https://github.com/Aimino-Tech) | Follow [@Aimino-Tech](https://github.com/Aimino-Tech) on GitHub for more projects. |
+
+<p align="center">
+  <a href="https://discord.gg/GVYVCwWX"><img src="https://discord.com/api/v10/guilds/1514222622215241729/widget.png?style=banner2" alt="Discord Widget"></a>
+</p>
 
 ---
 
