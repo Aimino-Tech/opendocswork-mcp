@@ -1,5 +1,10 @@
 # office-oxide-mcp
 
+[![GitHub stars](https://img.shields.io/github/stars/Aimino-Tech/opendocswork-mcp?style=social)](https://github.com/Aimino-Tech/opendocswork-mcp/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Aimino-Tech/opendocswork-mcp?style=social)](https://github.com/Aimino-Tech/opendocswork-mcp/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/Aimino-Tech/opendocswork-mcp)](https://github.com/Aimino-Tech/opendocswork-mcp/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/Aimino-Tech/opendocswork-mcp)](https://github.com/Aimino-Tech/opendocswork-mcp/pulls)
+
 **Rust-native MCP server for Office document processing (Excel, Word, PowerPoint, PDF).**  
 Sub-millisecond, local-first, open source — the "open source Aspose."
 
