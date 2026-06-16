@@ -1,0 +1,14 @@
+{
+  "name": "office-oxide-mcp",
+  "description": "Rust-native MCP server for Office document processing (Excel, Word, PowerPoint, PDF). Sub-millisecond, local-first, open source.",
+  "version": "0.2.0",
+  "repository": "https://github.com/Aimino-Tech/opendocswork-mcp",
+  "license": "MIT",
+  "servers": {
+    "office-oxide-mcp": {
+      "command": "office-oxide-mcp",
+      "args": ["--transport", "stdio"],
+      "env": {}
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "office-oxide-mcp",
+  "description": "Rust-native MCP server for Office document processing (Excel, Word, PowerPoint, PDF). Sub-millisecond, local-first, open source alternative to Aspose.",
+  "categories": [
+    "developer-tools",
+    "office",
+    "ai",
+    "document-processing"
+  ],
+  "tags": [
+    "mcp-server",
+    "office-documents",
+    "excel",
+    "word",
+    "powerpoint",
+    "pdf",
+    "rust",
+    "ai-agent",
+    "document-processing"
+  ],
+  "repository": "https://github.com/Aimino-Tech/opendocswork-mcp",
+  "npm": "office-oxide-mcp",
+  "license": "MIT"
+}

@@ -1,0 +1,11 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+  commandFunction:
+    |-
+      (config) => ({
+        command: 'office-oxide-mcp',
+        args: ['--transport', 'stdio']
+      })
