@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ImplementationArtifact",
+  "type": "object",
+  "required": ["requirements_implemented", "changed_files", "checks", "deviations", "status"],
+  "properties": {
+    "requirements_implemented": {"type": "array", "items": {"type": "string"}},
+    "changed_files": {"type": "array", "items": {"type": "string"}},
+    "checks": {"type": "array", "items": {"type": "object", "properties": {"command": {"type": "string"}, "result": {"type": "string"}}}},
+    "deviations": {"type": "array", "items": {"type": "string"}},
+    "unexpected_failures": {"type": "array", "items": {"type": "object", "properties": {"failure": {"type": "string"}, "cause": {"type": "string"}, "evidence": {"type": "string"}}}},
+    "known_limitations": {"type": "array", "items": {"type": "string"}},
+    "verifier_evidence": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["IMPLEMENTED_FOR_VERIFICATION", "REPLAN", "HUMAN_DECISION"]}
+  }
+}

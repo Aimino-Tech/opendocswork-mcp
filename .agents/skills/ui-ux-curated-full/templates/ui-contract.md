@@ -1,0 +1,20 @@
+# UI Contract
+- Product/surface:
+- User + primary job:
+- Existing components/tokens to reuse:
+- Primary action:
+- Secondary actions:
+- Information hierarchy:
+- Layout regions:
+- Density + spacing scale:
+- Typography roles:
+- Semantic colors:
+- Surface/elevation model:
+- Selected style family + where it is allowed:
+- Interaction states:
+- Loading/empty/error states:
+- Responsive transformations:
+- Accessibility constraints:
+- Motion rules:
+- Explicit anti-patterns:
+- Acceptance screenshots/viewports:

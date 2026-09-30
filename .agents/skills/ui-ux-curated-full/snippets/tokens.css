@@ -1,0 +1,8 @@
+:root {
+  --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem;
+  --space-6: 1.5rem; --space-8: 2rem;
+  --radius-sm: .5rem; --radius-md: .75rem; --radius-lg: 1rem;
+  --surface: color-mix(in srgb, Canvas 96%, transparent);
+  --surface-elevated: color-mix(in srgb, Canvas 99%, transparent);
+  --border-subtle: color-mix(in srgb, CanvasText 12%, transparent);
+}

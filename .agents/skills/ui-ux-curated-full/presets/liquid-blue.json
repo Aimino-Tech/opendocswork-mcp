@@ -1,0 +1,16 @@
+{
+  "name": "liquid-blue",
+  "material": "liquid-glass",
+  "mood": "cool-technical",
+  "use": [
+    "floating-navigation",
+    "assistant-shell",
+    "tool-overlay"
+  ],
+  "content_surface": "opaque",
+  "motion": "spatial-continuity",
+  "avoid": [
+    "full-page-translucency",
+    "constant-morphing"
+  ]
+}

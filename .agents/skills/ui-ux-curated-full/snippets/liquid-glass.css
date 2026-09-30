@@ -1,0 +1,12 @@
+.liquid-shell {
+  position: relative;
+  overflow: clip;
+  background: color-mix(in srgb, Canvas 72%, transparent);
+  border: 1px solid color-mix(in srgb, CanvasText 14%, transparent);
+  backdrop-filter: blur(22px) saturate(135%);
+  -webkit-backdrop-filter: blur(22px) saturate(135%);
+}
+.liquid-shell::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(135deg, color-mix(in srgb, white 20%, transparent), transparent 42%);
+}

@@ -1,0 +1,15 @@
+interface:
+  display_name: coding control plane
+  short_description: Plan, execute, and independently verify non-trivial coding work
+    with strong repository grounding, explicit acceptance criteria, anti-regression
+    gates, and strict limits on fix loops. Use for coding tasks where first-pass correctness
+    matters more than token cost.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

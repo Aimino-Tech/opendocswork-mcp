@@ -1,0 +1,2 @@
+.morph-shell { transform-origin: var(--morph-origin, 50% 50%); transition: transform 220ms cubic-bezier(.2,.8,.2,1), border-radius 220ms cubic-bezier(.2,.8,.2,1), opacity 160ms ease; }
+@media (prefers-reduced-motion: reduce) { .morph-shell { transition-duration: 1ms; } }
