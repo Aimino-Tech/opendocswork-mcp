@@ -1,0 +1,11 @@
+# Pre-Delivery Checklist
+- 375 / 768 / 1024 / 1440 widths checked where relevant
+- Keyboard/focus path works
+- Contrast and icon labels checked
+- Loading, empty, error, disabled, success states rendered
+- Long text/IDs/localization do not break layout
+- No unnecessary horizontal scroll
+- Motion respects reduced-motion and never blocks action
+- Glass transparency preserves readability
+- No random one-off colors/radii/shadows
+- Primary action remains obvious

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PlanArtifact",
+  "type": "object",
+  "required": ["goal", "requirements", "affected_components", "invariants", "implementation_steps", "acceptance_criteria", "verification_plan", "regression_surface", "status"],
+  "properties": {
+    "goal": {"type": "string"},
+    "requirements": {"type": "array", "items": {"type": "object", "required": ["id", "text"], "properties": {"id": {"type": "string"}, "text": {"type": "string"}}}},
+    "evidence_consulted": {"type": "array", "items": {"type": "string"}},
+    "affected_components": {"type": "array", "items": {"type": "string"}},
+    "invariants": {"type": "array", "items": {"type": "string"}},
+    "assumptions": {"type": "array", "items": {"type": "object", "properties": {"assumption": {"type": "string"}, "validation": {"type": "string"}}}},
+    "architecture_impact": {"type": "string"},
+    "implementation_steps": {"type": "array", "items": {"type": "string"}},
+    "acceptance_criteria": {"type": "array", "items": {"type": "object", "required": ["id", "requirement_id", "criterion"], "properties": {"id": {"type": "string"}, "requirement_id": {"type": "string"}, "criterion": {"type": "string"}}}},
+    "verification_plan": {"type": "array", "items": {"type": "string"}},
+    "regression_surface": {"type": "array", "items": {"type": "string"}},
+    "ui_contract": {"type": ["object", "null"]},
+    "open_decisions": {"type": "array", "items": {"type": "string"}},
+    "missing_evidence": {"type": "array", "items": {"type": "string"}},
+    "non_goals": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["PLAN_READY", "NEEDS_EVIDENCE", "HUMAN_DECISION"]}
+  }
+}

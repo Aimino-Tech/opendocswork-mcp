@@ -1,0 +1,15 @@
+interface:
+  display_name: ui visual verifier
+  short_description: Independently inspect rendered product UI after implementation,
+    classify concrete visual/UX defects, verify responsive and state behavior, and
+    prevent random CSS fix loops. Use after UI changes or when the result looks weak
+    despite correct code.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

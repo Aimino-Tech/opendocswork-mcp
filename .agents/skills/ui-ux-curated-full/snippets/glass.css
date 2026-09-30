@@ -1,0 +1,10 @@
+.glass-surface {
+  background: color-mix(in srgb, Canvas 76%, transparent);
+  border: 1px solid color-mix(in srgb, CanvasText 12%, transparent);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  box-shadow: 0 12px 32px color-mix(in srgb, CanvasText 10%, transparent);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass-surface { background: Canvas; backdrop-filter: none; }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "liquid-warm",
+  "material": "liquid-glass",
+  "mood": "friendly-premium",
+  "use": [
+    "mobile-controls",
+    "onboarding-focal-surface",
+    "assistant"
+  ],
+  "content_surface": "warm-opaque",
+  "motion": "subtle",
+  "avoid": [
+    "dense-data-on-glass"
+  ]
+}

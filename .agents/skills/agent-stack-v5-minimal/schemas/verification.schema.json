@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "VerificationArtifact",
+  "type": "object",
+  "required": ["criteria", "regressions", "scope_review", "status"],
+  "properties": {
+    "criteria": {"type": "array", "items": {"type": "object", "required": ["id", "status", "evidence"], "properties": {"id": {"type": "string"}, "status": {"enum": ["PASS", "FAIL", "UNPROVEN"]}, "evidence": {"type": "array", "items": {"type": "string"}}}}},
+    "regressions": {"type": "array", "items": {"type": "string"}},
+    "architecture_compliance": {"type": "string"},
+    "scope_review": {"type": "array", "items": {"type": "string"}},
+    "ui_evidence": {"type": "array", "items": {"type": "string"}},
+    "missing_evidence": {"type": "array", "items": {"type": "string"}},
+    "open_decisions": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["READY", "FIX_LOCAL", "REPLAN", "HUMAN_DECISION"]},
+    "next_action": {"type": "string"}
+  }
+}

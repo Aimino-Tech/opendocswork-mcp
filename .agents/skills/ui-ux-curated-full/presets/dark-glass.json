@@ -1,0 +1,13 @@
+{
+  "name": "dark-glass",
+  "canvas": "near-black-solid",
+  "glass": "charcoal-translucent",
+  "border": "low-chroma-highlight",
+  "accent": "single-semantic-accent",
+  "text": "high-contrast",
+  "avoid": [
+    "neon-everywhere",
+    "gray-on-gray",
+    "blur-behind-small-text"
+  ]
+}

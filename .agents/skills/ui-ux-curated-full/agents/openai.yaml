@@ -1,0 +1,16 @@
+interface:
+  display_name: ui ux curated full
+  short_description: High-quality product UI/UX design system for web and mobile with
+    curated glassmorphism, liquid glass, and liquid morph patterns. Use before implementing
+    UI, when redesigning a surface, or when reviewing interfaces that feel generic,
+    inconsistent, dense, or visually weak. Produces a stable UI contract and page-level
+    design decisions before code.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
