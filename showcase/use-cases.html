@@ -1026,7 +1026,7 @@
                   <span class="tool-badge">word.invoice</span>
                 </td>
                 <td class="col-prompt" data-label="Prompt">
-                  <span class="prompt-text">"Erstellen Sie eine Rechnung fuer ein Energieaudit bei der Meyer Automotive Group services..."</span>
+                  <span class="prompt-text">"Demo-Rechnung fuer Posch Energy GmbH: Energieaudit und PV-Anlage, 5 Positionen, 19% MwSt, EUR, 30 Tage Zahlungsziel. Alle Werte sind fiktive Demo-Daten."</span>
                 </td>
                 <td class="col-status" data-label="Status">
                   <span class="status-badge status-working">Working</span>
@@ -1035,7 +1035,7 @@
                   <span class="summary-text">5 Positionen, 19% MwSt, Energieaudit + PV-Anlage</span>
                 </td>
                 <td class="col-download" data-label="Download">
-                  <a href="generated/05-thyssen-steel/05-thyssen-steel.xlsx" class="download-link" download>
+                  <a href="generated/05-posch-energy-invoice/invoice.docx" class="download-link" download>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                     .docx
                   </a>
@@ -1046,22 +1046,44 @@
                   <div class="expand-content">
                     <div class="expand-body">
                       <h4>Full Prompt</h4>
-                      <div class="expand-prompt">"Erstellen Sie eine Rechnung fuer ein Energieaudit bei der Meyer Automotive Group services with itemized line items, subtotal, sales tax at 8.75%, and net-30 payment terms"</div>
+                      <div class="expand-prompt">"Demo-Rechnung fuer Posch Energy GmbH: Energieaudit und PV-Anlage, 5 Positionen, 19% MwSt, EUR, 30 Tage Zahlungsziel. Alle Werte sind fiktive Demo-Daten."</div>
                       <h4>MCP Tool Call</h4>
                       <pre class="expand-json">{
   "jsonrpc": "2.0",
   "id": 1,
   "method": "tools/call",
   "params": {
-    "name": "skill_run",
+    "name": "run_skill",
     "arguments": {
-      "skill": "word.invoice",
-      "prompt": "Erstellen Sie eine Rechnung fuer ein Energieaudit bei der Meyer Automotive Group services with itemized line items, subtotal, sales tax at 8.75%, and net-30 payment terms"
+      "skill_name": "word.invoice",
+      "params": {
+        "invoice_number": "DEMO-2026-005",
+        "date": "2026-11-10",
+        "due_date": "2026-12-10",
+        "from_company": "Office Oxide Demo Services",
+        "from_address": "Demo Street 1, 10115 Berlin, Germany",
+        "from_email": "billing@example.invalid",
+        "to_company": "Posch Energy GmbH",
+        "to_address": "Example Energy Park 1, 45127 Essen, Germany",
+        "to_email": "finance@example.invalid",
+        "line_items": [
+          {"description": "Energy audit and site assessment", "quantity": 1, "unit_price": 1200},
+          {"description": "PV system feasibility study", "quantity": 1, "unit_price": 850},
+          {"description": "PV yield and consumption model", "quantity": 1, "unit_price": 650},
+          {"description": "Grid connection review", "quantity": 1, "unit_price": 450},
+          {"description": "Final report and recommendations", "quantity": 1, "unit_price": 550}
+        ],
+        "tax_rate": 0.19,
+        "tax_label": "MwSt",
+        "currency": "EUR",
+        "payment_terms": "Net 30 days",
+        "notes": "Fictional demo data; not a real invoice."
+      }
     }
   }
 }</pre>
                       <h4>Output</h4>
-                      <div class="expand-note">Generated <strong>invoice.docx</strong> — real Office file produced by the MCP server.</div>
+                      <div class="expand-note">Generated <strong>invoice.docx</strong> with fictional showcase data; not a real transaction.</div>
                     </div>
                   </div>
                 </td>
@@ -1197,7 +1219,7 @@
                   <span class="summary-text">PDF-Export eines Monatsberichts</span>
                 </td>
                 <td class="col-download" data-label="Download">
-                  <a href="generated/06-bauer-construction/06-bauer-construction.xlsx" class="download-link" download>
+                  <a href="generated/06-bauer-construction/financial-report.pdf" class="download-link" download>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                     .pdf
                   </a>
@@ -1208,7 +1230,7 @@
                   <div class="expand-content">
                     <div class="expand-body">
                       <h4>Full Prompt</h4>
-                      <div class="expand-prompt">"Export this financial spreadsheet to PDF with all formatting, column widths, and print settings preserved"</div>
+                      <div class="expand-prompt">"Export the tracked Bauer Construction project-control workbook to PDF, preserving formatting, column widths, and print settings."</div>
                       <h4>MCP Tool Call</h4>
                       <pre class="expand-json">{
   "jsonrpc": "2.0",
@@ -1217,13 +1239,13 @@
   "params": {
     "name": "office_export_pdf",
     "arguments": {
-      "file_path": "document.docx",
-      "prompt": "Export this financial spreadsheet to PDF with all formatting, column widths, and print settings preserved"
+      "file_path": "showcase/generated/06-bauer-construction/06-bauer-construction.xlsx",
+      "output_path": "showcase/generated/06-bauer-construction/financial-report.pdf"
     }
   }
 }</pre>
                       <h4>Output</h4>
-                      <div class="expand-note">Generated <strong>financial-report.pdf</strong> — real Office file produced by the MCP server.</div>
+                      <div class="expand-note">Generated <strong>financial-report.pdf</strong> from the tracked Bauer Construction workbook — real Office file produced by the MCP server.</div>
                     </div>
                   </div>
                 </td>
